@@ -10,6 +10,6 @@
 ## Week 2
 
 - Tool(s): none
-- What I asked for:
+- What I asked for: none
 - What I kept, changed or rejected, and why:
 - One thing the AI got wrong and how I fixed it:
