@@ -16,6 +16,20 @@ function App() {
   const [view, setView] = useState("menu");
   const [lastOrder, setLastOrder] = useState(null);
 
+  const selectedVendor =
+    vendors.find((vendor) => vendor.id === selectedVendorId) ?? vendors[0];
+  const cartCount = cart.reduce((count, line) => count + line.qty, 0);
+
+  const [rewardPoints, setRewardPoints] = useState(120);
+  const [useRewardPoints, setUseRewardPoints] = useState(false);
+
+  const subtotal = cart.reduce(
+    (sum, line) => sum + line.item.price * line.qty,
+    0,
+  );
+  const rewardDiscount = useRewardPoints ? Math.min(rewardPoints, 50) * 0.1 : 0;
+  const finalTotal = Math.max(0, subtotal - rewardDiscount);
+
   useEffect(() => {
     const controller = new AbortController();
 
@@ -42,10 +56,6 @@ function App() {
     return () => controller.abort();
   }, [reloadKey]);
 
-  const selectedVendor =
-    vendors.find((vendor) => vendor.id === selectedVendorId) ?? vendors[0];
-  const cartCount = cart.reduce((count, line) => count + line.qty, 0);
-
   function handleAddToCart(item) {
     setCart((previousCart) => {
       const existingLine = previousCart.find(
@@ -64,9 +74,7 @@ function App() {
     setCart((previousCart) =>
       previousCart
         .map((line) =>
-          line.item.id === itemId
-            ? { ...line, qty: line.qty + change }
-            : line,
+          line.item.id === itemId ? { ...line, qty: line.qty + change } : line,
         )
         .filter((line) => line.qty > 0),
     );
@@ -78,12 +86,31 @@ function App() {
     );
   }
 
+  function handleToggleReward() {
+    setUseRewardPoints((previousValue) => !previousValue);
+  }
+
   function handlePlaceOrder(details) {
-    const total = cart.reduce(
+    const subtotalValue = cart.reduce(
       (sum, line) => sum + line.item.price * line.qty,
       0,
     );
-    setLastOrder({ ...details, total });
+
+    const discountValue = useRewardPoints
+      ? Math.min(rewardPoints, 50) * 0.1
+      : 0;
+
+    const orderTotal = Math.max(0, subtotalValue - discountValue);
+    const earnedPoints = Math.floor(orderTotal);
+
+    setRewardPoints((previousPoints) => previousPoints + earnedPoints);
+    setLastOrder({
+      ...details,
+      total: orderTotal,
+      rewardDiscount: discountValue,
+      pointsEarned: earnedPoints,
+      usedRewardPoints: useRewardPoints,
+    });
     setCart([]);
     setView("done");
   }
@@ -102,6 +129,11 @@ function App() {
         onChangeQty={handleChangeQty}
         onRemove={handleRemove}
         onPlaceOrder={handlePlaceOrder}
+        rewardPoints={rewardPoints}
+        useRewardPoints={useRewardPoints}
+        onToggleReward={handleToggleReward}
+        rewardDiscount={rewardDiscount}
+        finalTotal={finalTotal}
       />
     );
   } else if (view === "done") {
@@ -110,8 +142,8 @@ function App() {
         <h2 className="section-title">Order placed</h2>
         {lastOrder && (
           <p className="muted">
-            Thanks, {lastOrder.name}. Pick up at {lastOrder.pickupTime}
-            {" "} (Mahallah {lastOrder.mahallah}). Total RM{" "}
+            Thanks, {lastOrder.name}. Pick up at {lastOrder.pickupTime}{" "}
+            (Mahallah {lastOrder.mahallah}). Total RM{" "}
             {lastOrder.total.toFixed(2)}.
           </p>
         )}
