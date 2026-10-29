@@ -1,16 +1,6 @@
 import CartItem from "./CartItems.jsx";
 import CheckoutForm from "./CheckoutForms.jsx";
-function CartPage({
-  cart,
-  onChangeQty,
-  onRemove,
-  onPlaceOrder,
-  rewardPoints,
-  useRewardPoints,
-  onToggleReward,
-  rewardDiscount,
-  finalTotal,
-}) {
+function CartPage({ cart, onChangeQty, onRemove, onPlaceOrder }) {
   if (cart.length === 0) {
     return (
       <p className="muted">
@@ -39,29 +29,8 @@ function CartPage({
           ))}
         </ul>
         <p className="cart-total">Total: RM {total.toFixed(2)}</p>
-        <p className="reward-banner">Rewards: {rewardPoints} points</p>
-
-        <label className="reward-option">
-          <input
-            type="checkbox"
-            checked={useRewardPoints}
-            onChange={onToggleReward}
-          />
-          Redeem {Math.min(rewardPoints, 50)} points for RM{" "}
-          {rewardDiscount.toFixed(2)}
-        </label>
-
-        <p className="cart-total">Subtotal: RM {subtotal.toFixed(2)}</p>
-        <p className="cart-total discounted">
-          Pay now: RM {finalTotal.toFixed(2)}
-        </p>
       </div>
-      <CheckoutForm
-        onPlaceOrder={onPlaceOrder}
-        rewardDiscount={rewardDiscount}
-        finalTotal={finalTotal}
-        useRewardPoints={useRewardPoints}
-      />
+      <CheckoutForm onPlaceOrder={onPlaceOrder} />
     </div>
   );
 }

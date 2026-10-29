@@ -24,12 +24,7 @@ function validate(values) {
   }
   return errors;
 }
-function CheckoutForm({
-  onPlaceOrder,
-  rewardDiscount,
-  finalTotal,
-  useRewardPoints,
-}) {
+function CheckoutForm({ onPlaceOrder }) {
   const [values, setValues] = useState({
     name: "",
     mahallah: "",
@@ -87,12 +82,6 @@ function CheckoutForm({
       <button type="submit" className="btn">
         Place order
       </button>
-      {useRewardPoints && (
-        <p className="reward-summary">
-          Reward discount applied: -RM {rewardDiscount.toFixed(2)}
-        </p>
-      )}
-      <p className="checkout-total">Total: RM {finalTotal.toFixed(2)}</p>
     </form>
   );
 }
