@@ -17,27 +17,28 @@ function MenuList({ items, onAdd }) {
 
   return (
     <>
-      <div className="category-filter">
+      <div className="category-filter" aria-label="Filter menu by category">
         {categories.map((category) => (
           <button
             key={category}
             type="button"
             className={`chip ${activeCategory === category ? "active" : ""}`}
-            onClick={() => {
-              console.log("Selected category:", category);
-              setActiveCategory(category);
-            }}
+            onClick={() => setActiveCategory(category)}
           >
             {category}
           </button>
         ))}
       </div>
 
-      <div className="grid">
-        {filteredItems.map((item) => (
-          <MenuItemCard key={item.id} item={item} onAdd={onAdd} />
-        ))}
-      </div>
+      {filteredItems.length === 0 ? (
+        <p className="muted">No items in this category yet.</p>
+      ) : (
+        <div className="grid">
+          {filteredItems.map((item) => (
+            <MenuItemCard key={item.id} item={item} onAdd={onAdd} />
+          ))}
+        </div>
+      )}
     </>
   );
 }
