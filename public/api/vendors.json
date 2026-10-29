@@ -5,12 +5,6 @@
     "location": "Mahallah Bilal, Main Block, Level 1 Floor",
     "openHours": "7:00 am - 10:00 pm",
     "isOpen": true,
-    "rewards": {
-      "enabled": true,
-      "pointsPerRM": 1,
-      "redeemRate": 10,
-      "minPoints": 50
-    },
     "menu": [
       {
         "id": "bil-1",

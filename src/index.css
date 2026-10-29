@@ -537,3 +537,25 @@ a.card:hover {
 .error {
   border-left: 4px solid #b3261e;
 }
+
+.category-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.chip {
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #333;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.chip.active {
+  background: #00685e;
+  color: white;
+  border-color: #1e6226;
+}
