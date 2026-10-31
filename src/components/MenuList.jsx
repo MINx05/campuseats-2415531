@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useCart } from "../hooks/useCart.js";
 import MenuItemCard from "./MenuItemCard.jsx";
 
-function MenuList({ items, onAdd }) {
+function MenuList({ items }) {
   const [activeCategory, setActiveCategory] = useState("All");
+  const { addToCart } = useCart();
 
   const categories = ["All", ...new Set(items.map((item) => item.category))];
 
@@ -35,7 +37,7 @@ function MenuList({ items, onAdd }) {
       ) : (
         <div className="grid">
           {filteredItems.map((item) => (
-            <MenuItemCard key={item.id} item={item} onAdd={onAdd} />
+            <MenuItemCard key={item.id} item={item} onAdd={addToCart} />
           ))}
         </div>
       )}
