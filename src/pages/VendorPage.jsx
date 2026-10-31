@@ -1,11 +1,14 @@
-import { Link, useParams } from "react-router";
+import { Link, useParams, useSearchParams } from "react-router";
 import MenuList from "../components/MenuList.jsx";
 import { ErrorMessage, Loading } from "../components/Status.jsx";
 import { useVendors } from "../hooks/useVendors.js";
 
 function VendorPage() {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
   const { vendors, loading, error, reload } = useVendors();
+
+  const activeCategory = searchParams.get("cat") ?? "All";
 
   if (loading) {
     return <Loading />;
@@ -35,7 +38,7 @@ function VendorPage() {
       <p className="muted">
         {vendor.location} · {vendor.openHours}
       </p>
-      <MenuList items={vendor.menu} />
+      <MenuList items={vendor.menu} activeCategory={activeCategory} />
     </section>
   );
 }

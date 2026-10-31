@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { Link, useLocation } from "react-router";
 import { useCart } from "../hooks/useCart.js";
 import MenuItemCard from "./MenuItemCard.jsx";
 
-function MenuList({ items }) {
-  const [activeCategory, setActiveCategory] = useState("All");
+function MenuList({ items, activeCategory = "All" }) {
+  const location = useLocation();
   const { addToCart } = useCart();
 
   const categories = ["All", ...new Set(items.map((item) => item.category))];
@@ -20,16 +20,22 @@ function MenuList({ items }) {
   return (
     <>
       <div className="category-filter" aria-label="Filter menu by category">
-        {categories.map((category) => (
-          <button
-            key={category}
-            type="button"
-            className={`chip ${activeCategory === category ? "active" : ""}`}
-            onClick={() => setActiveCategory(category)}
-          >
-            {category}
-          </button>
-        ))}
+        {categories.map((category) => {
+          const nextUrl =
+            category === "All"
+              ? location.pathname
+              : `${location.pathname}?cat=${encodeURIComponent(category)}`;
+
+          return (
+            <Link
+              key={category}
+              to={nextUrl}
+              className={`chip ${activeCategory === category ? "active" : ""}`}
+            >
+              {category}
+            </Link>
+          );
+        })}
       </div>
 
       {filteredItems.length === 0 ? (
