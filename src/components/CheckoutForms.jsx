@@ -9,7 +9,7 @@ const MAHALLAHS = [
   "Uthman",
   "Zubair",
 ];
-// A plain function: values in, errors object out. Empty object = valid.
+
 function validate(values) {
   const errors = {};
   if (values.name.trim().length < 3)
@@ -31,7 +31,7 @@ function CheckoutForm({ onPlaceOrder }) {
     pickupTime: "",
   });
   const [errors, setErrors] = useState({});
-  // One handler for every input: the input's name matches a key in values.
+
   function handleChange(event) {
     const { name, value } = event.target;
     setValues((prev) => ({ ...prev, [name]: value }));
