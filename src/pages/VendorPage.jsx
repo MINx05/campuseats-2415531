@@ -1,14 +1,55 @@
-import { Link, useParams, useSearchParams } from "react-router";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router";
 import MenuList from "../components/MenuList.jsx";
 import { ErrorMessage, Loading } from "../components/Status.jsx";
+import { useAuth } from "../hooks/useAuth.js";
 import { useVendors } from "../hooks/useVendors.js";
 
 function VendorPage() {
   const { id } = useParams();
-  const [searchParams] = useSearchParams();
+  const { user, loading: authLoading } = useAuth();
+  const preferenceKey = user?.uid ? `ce-category-${user.uid}` : null;
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [loadedPreferenceKey, setLoadedPreferenceKey] = useState(null);
   const { vendors, loading, error, reload } = useVendors();
 
-  const activeCategory = searchParams.get("cat") ?? "All";
+  useEffect(() => {
+    if (authLoading) return;
+
+    let savedCategory = "All";
+    if (preferenceKey) {
+      try {
+        savedCategory = localStorage.getItem(preferenceKey) ?? "All";
+      } catch (error) {
+        console.error(
+          `Unable to read localStorage key "${preferenceKey}"`,
+          error,
+        );
+      }
+    }
+
+    setActiveCategory(savedCategory);
+    setLoadedPreferenceKey(preferenceKey ?? "guest");
+  }, [authLoading, preferenceKey]);
+
+  function handleCategoryChange(category) {
+    setActiveCategory(category);
+
+    if (preferenceKey) {
+      try {
+        localStorage.setItem(preferenceKey, category);
+      } catch (error) {
+        console.error(
+          `Unable to save localStorage key "${preferenceKey}"`,
+          error,
+        );
+      }
+    }
+  }
+
+  if (authLoading || loadedPreferenceKey !== (preferenceKey ?? "guest")) {
+    return <Loading />;
+  }
 
   if (loading) {
     return <Loading />;
@@ -38,7 +79,11 @@ function VendorPage() {
       <p className="muted">
         {vendor.location} · {vendor.openHours}
       </p>
-      <MenuList items={vendor.menu} activeCategory={activeCategory} />
+      <MenuList
+        items={vendor.menu}
+        activeCategory={activeCategory}
+        onCategoryChange={handleCategoryChange}
+      />
     </section>
   );
 }

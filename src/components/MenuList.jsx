@@ -2,11 +2,14 @@ import { Link, useLocation } from "react-router";
 import { useCart } from "../hooks/useCart.js";
 import MenuItemCard from "./MenuItemCard.jsx";
 
-function MenuList({ items, activeCategory = "All" }) {
+function MenuList({ items, activeCategory = "All", onCategoryChange }) {
   const location = useLocation();
   const { addToCart } = useCart();
 
   const categories = ["All", ...new Set(items.map((item) => item.category))];
+  const selectedCategory = categories.includes(activeCategory)
+    ? activeCategory
+    : "All";
 
   const filteredItems =
     activeCategory === "All"
@@ -31,6 +34,7 @@ function MenuList({ items, activeCategory = "All" }) {
               key={category}
               to={nextUrl}
               className={`chip ${activeCategory === category ? "active" : ""}`}
+              onClick={() => onCategoryChange?.(category)}
             >
               {category}
             </Link>
