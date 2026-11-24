@@ -34,3 +34,10 @@
 - What I asked for: none
 - What I kept, changed or rejected, and why: none
 - One thing the AI got wrong and how I fixed it: none
+
+## Week 6
+
+- Tool(s):
+- What I asked for:
+- What I kept, changed or rejected, and why:
+- One thing the AI got wrong and how I fixed it:

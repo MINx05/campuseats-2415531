@@ -2,10 +2,15 @@ import { useNavigate } from "react-router";
 import CartItem from "../components/CartItems.jsx";
 import CheckoutForm from "../components/CheckoutForms.jsx";
 import useCart from "../hooks/useCart.js";
+import { useState } from "react";
+import { useAuth } from "../hooks/useAuth.js";
+import { placeOrders } from "../services/orders.js";
 
 function CartPage() {
-  const { cart, total, changeQty, removeFromCart, placeOrder } = useCart();
+  const { cart, total, changeQty, removeFromCart, clearCart } = useCart();
+  const { user } = useAuth();
   const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   if (cart.length === 0) {
     return (
@@ -15,9 +20,15 @@ function CartPage() {
     );
   }
 
-  function handlePlaceOrder(details) {
-    placeOrder(details);
-    navigate("/orders");
+  async function handlePlaceOrder(details) {
+    setError("");
+    try {
+      await placeOrders(user, cart, details);
+      clearCart();
+      navigate("/orders");
+    } catch (err) {
+      setError(`Could not place the order: ${err.message}`);
+    }
   }
 
   return (
@@ -33,9 +44,17 @@ function CartPage() {
             />
           ))}
         </ul>
+        {error && (
+          <p className="field-error" role="alert">
+            {error}
+          </p>
+        )}
         <p className="cart-total">Total: RM {total.toFixed(2)}</p>
       </div>
-      <CheckoutForm onPlaceOrder={handlePlaceOrder} />
+      <CheckoutForm
+        defaultName={user?.displayName ?? ""}
+        onPlaceOrder={handlePlaceOrder}
+      />
     </div>
   );
 }

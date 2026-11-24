@@ -7,6 +7,7 @@ import NotFoundPage from "./pages/NotFoundPage.jsx";
 import OrdersPage from "./pages/OrdersPage.jsx";
 import VendorPage from "./pages/VendorPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
+import SeedPage from "./pages/SeedPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { AuthProvider } from "./context/AuthProvider.jsx";
@@ -27,6 +28,9 @@ function App() {
                 <Route path="cart" element={<CartPage />} />
                 <Route path="orders" element={<OrdersPage />} />
               </Route>
+              {import.meta.env.DEV && (
+                <Route path="seed" element={<SeedPage />} />
+              )}
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>

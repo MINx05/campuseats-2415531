@@ -1,17 +1,17 @@
-import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
+import { useVendor } from "../hooks/useVendor.js";
 import MenuList from "../components/MenuList.jsx";
-import { ErrorMessage, Loading } from "../components/Status.jsx";
+import { Loading, ErrorMessage } from "../components/Status.jsx";
 import { useAuth } from "../hooks/useAuth.js";
-import { useVendors } from "../hooks/useVendors.js";
+import { useEffect, useState } from "react";
 
 function VendorPage() {
   const { id } = useParams();
+  const { vendor, menu, loading, error } = useVendor(id);
   const { user, loading: authLoading } = useAuth();
   const preferenceKey = user?.uid ? `ce-category-${user.uid}` : null;
   const [activeCategory, setActiveCategory] = useState("All");
   const [loadedPreferenceKey, setLoadedPreferenceKey] = useState(null);
-  const { vendors, loading, error, reload } = useVendors();
 
   useEffect(() => {
     if (authLoading) return;
@@ -27,7 +27,6 @@ function VendorPage() {
         );
       }
     }
-
     setActiveCategory(savedCategory);
     setLoadedPreferenceKey(preferenceKey ?? "guest");
   }, [authLoading, preferenceKey]);
@@ -51,36 +50,33 @@ function VendorPage() {
     return <Loading />;
   }
 
-  if (loading) {
-    return <Loading />;
-  }
+  if (loading) return <Loading />;
 
-  if (error) {
-    return <ErrorMessage message={error} onRetry={reload} />;
-  }
-
-  const vendor = vendors.find((item) => item.id === id);
-
-  if (!vendor) {
+  if (error)
     return (
-      <section className="card">
-        <h2 className="section-title">Vendor not found</h2>
-        <p className="muted">The vendor you are looking for does not exist.</p>
-        <Link to="/" className="btn">
-          Back to vendors
-        </Link>
-      </section>
+      <ErrorMessage message={error} onRetry={() => window.location.reload()} />
     );
-  }
 
+  if (!vendor)
+    return (
+      <p>
+        Vendor not found. <Link to="/">Back to vendors</Link>
+      </p>
+    );
+
+  // Each cart line must know its vendor, so orders can be split per vendor.
+  const items = menu.map((item) => ({ ...item, vendorName: vendor.name }));
   return (
     <section>
+      <p>
+        <Link to="/">← All vendors</Link>
+      </p>
       <h2 className="section-title">{vendor.name}</h2>
       <p className="muted">
         {vendor.location} · {vendor.openHours}
       </p>
       <MenuList
-        items={vendor.menu}
+        items={items}
         activeCategory={activeCategory}
         onCategoryChange={handleCategoryChange}
       />

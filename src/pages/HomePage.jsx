@@ -1,9 +1,9 @@
 import { ErrorMessage, Loading } from "../components/Status.jsx";
 import VendorCard from "../components/VendorCard.jsx";
-import { useVendors } from "../hooks/useVendors.js";
+import { useVendor } from "../hooks/useVendor.js";
 
 function HomePage() {
-  const { vendors, loading, error, reload } = useVendors();
+  const { vendors, loading, error, reload } = useVendor();
 
   if (loading) {
     return <Loading />;

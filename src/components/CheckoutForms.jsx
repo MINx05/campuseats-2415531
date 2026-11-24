@@ -12,6 +12,7 @@ const MAHALLAHS = [
 
 function validate(values) {
   const errors = {};
+
   if (values.name.trim().length < 3)
     errors.name = "Enter your name (at least 3 characters).";
   if (!values.mahallah) errors.mahallah = "Choose your mahallah.";
@@ -24,9 +25,10 @@ function validate(values) {
   }
   return errors;
 }
-function CheckoutForm({ onPlaceOrder }) {
+
+function CheckoutForm({ defaultName = "", onPlaceOrder }) {
   const [values, setValues] = useState({
-    name: "",
+    name: defaultName,
     mahallah: "",
     pickupTime: "",
   });
@@ -36,12 +38,14 @@ function CheckoutForm({ onPlaceOrder }) {
     const { name, value } = event.target;
     setValues((prev) => ({ ...prev, [name]: value }));
   }
+
   function handleSubmit(event) {
     event.preventDefault(); // stop the page reloading
     const found = validate(values);
     setErrors(found);
     if (Object.keys(found).length === 0) onPlaceOrder(values);
   }
+
   return (
     <form className="card form" onSubmit={handleSubmit} noValidate>
       <h3>Checkout</h3>
@@ -85,4 +89,5 @@ function CheckoutForm({ onPlaceOrder }) {
     </form>
   );
 }
+
 export default CheckoutForm;
