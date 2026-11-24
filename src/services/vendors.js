@@ -1,4 +1,11 @@
-import { collection, doc, onSnapshot, writeBatch } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  where,
+  writeBatch,
+} from "firebase/firestore";
 import { db } from "../firebase.js";
 
 // Every subscribe function returns an unsubscribe function for useEffect cleanup.
@@ -22,17 +29,21 @@ export function subscribeToVendor(vendorId, onData, onError) {
   );
 }
 
-// Menus are a subcollection: vendors/{vendorId}/menu/{itemId}
-export function subscribeToMenu(vendorId, onData, onError) {
-  // TODO 1: copy subscribeToVendors, but listen to collection(db, 'vendors', vendorId, 'menu')
-  // Hint: map each doc to ({ id: d.id, vendorId, ...d.data() }) so the cart knows the vendor.
+// Personal feature: Filter in the query itself: where('category', '==', cat).
+export function subscribeToMenu(vendorId, category, onData, onError) {
   if (!vendorId) {
     onData([]);
     return () => {};
   }
 
+  const menuRef = collection(db, "vendors", vendorId, "menu");
+  const menuQuery =
+    category === "All"
+      ? menuRef
+      : query(menuRef, where("category", "==", category));
+
   return onSnapshot(
-    collection(db, "vendors", vendorId, "menu"),
+    menuQuery,
     (snapshot) =>
       onData(snapshot.docs.map((d) => ({ id: d.id, vendorId, ...d.data() }))),
     onError,

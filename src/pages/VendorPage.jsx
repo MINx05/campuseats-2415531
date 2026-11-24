@@ -7,11 +7,11 @@ import { useEffect, useState } from "react";
 
 function VendorPage() {
   const { id } = useParams();
-  const { vendor, menu, loading, error } = useVendor(id);
   const { user, loading: authLoading } = useAuth();
   const preferenceKey = user?.uid ? `ce-category-${user.uid}` : null;
   const [activeCategory, setActiveCategory] = useState("All");
   const [loadedPreferenceKey, setLoadedPreferenceKey] = useState(null);
+  const { vendor, menu, loading, error } = useVendor(id, activeCategory);
 
   useEffect(() => {
     if (authLoading) return;

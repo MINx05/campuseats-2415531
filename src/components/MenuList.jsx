@@ -6,19 +6,7 @@ function MenuList({ items, activeCategory = "All", onCategoryChange }) {
   const location = useLocation();
   const { addToCart } = useCart();
 
-  const categories = ["All", ...new Set(items.map((item) => item.category))];
-  const selectedCategory = categories.includes(activeCategory)
-    ? activeCategory
-    : "All";
-
-  const filteredItems =
-    activeCategory === "All"
-      ? items
-      : items.filter((item) => item.category === activeCategory);
-
-  if (items.length === 0) {
-    return <p className="muted">No items on this menu yet.</p>;
-  }
+  const categories = ["All", "Rice", "Noodles", "Drinks", "Starters", "Snacks"];
 
   return (
     <>
@@ -42,11 +30,11 @@ function MenuList({ items, activeCategory = "All", onCategoryChange }) {
         })}
       </div>
 
-      {filteredItems.length === 0 ? (
+      {items.length === 0 ? (
         <p className="muted">No items in this category yet.</p>
       ) : (
         <div className="grid">
-          {filteredItems.map((item) => (
+          {items.map((item) => (
             <MenuItemCard key={item.id} item={item} onAdd={addToCart} />
           ))}
         </div>

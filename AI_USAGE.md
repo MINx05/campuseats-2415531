@@ -37,7 +37,12 @@
 
 ## Week 6
 
-- Tool(s):
-- What I asked for:
-- What I kept, changed or rejected, and why:
-- One thing the AI got wrong and how I fixed it:
+- Tool(s): Copilot in VS Code
+- What I asked for: Fix the errors of localhost web become blank screen. Explain the instruction of what personal feature do for this week 6.
+- What I kept, changed or rejected, and why: I changed some of the codes that redundant.
+- One thing the AI got wrong and how I fixed it: AI delete the personal feature part of codes. I look at GitHub's commit and add it back.
+
+- Tool(s): Gemini
+- What I asked for: Explain what the error of blank screen after add personal feature codes for this week.
+- What I kept, changed or rejected, and why: I changed the position of variable (activeCategory) declaration in VendorPage.jsx because the activeCategory is called before it declare.
+- One thing the AI got wrong and how I fixed it: none

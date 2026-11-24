@@ -5,7 +5,7 @@ import {
   subscribeToMenu,
 } from "../services/vendors.js";
 
-export function useVendor(vendorId) {
+export function useVendor(vendorId, category = "All") {
   const [vendors, setVendors] = useState([]);
   const [vendor, setVendor] = useState(undefined); // undefined = loading, null = not found
   const [menu, setMenu] = useState([]);
@@ -38,7 +38,7 @@ export function useVendor(vendorId) {
         setLoading(false);
       },
     );
-    const stopMenu = subscribeToMenu(vendorId, setMenu, (err) => {
+    const stopMenu = subscribeToMenu(vendorId, category, setMenu, (err) => {
       setError(err.message);
       setLoading(false);
     });
@@ -47,7 +47,7 @@ export function useVendor(vendorId) {
       stopVendor();
       stopMenu();
     };
-  }, [vendorId, reloadKey]);
+  }, [vendorId, category, reloadKey]);
 
   function reload() {
     setReloadKey((key) => key + 1);
